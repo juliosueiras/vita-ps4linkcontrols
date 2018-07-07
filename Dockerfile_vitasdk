@@ -1,0 +1,32 @@
+FROM ubuntu:14.04
+MAINTAINER juliosueiras@gmail.com
+
+ENV VITASDK /usr/local/vitasdk
+ENV PATH $VITASDK/bin:$PATH
+
+
+RUN apt-get update -q && apt-get install make git-core cmake sudo wget curl -y
+
+RUN useradd -m docker
+ADD /sudoers.txt /etc/sudoers
+RUN chmod 440 /etc/sudoers
+ADD /sudoers.txt /etc/sudoers
+
+
+USER root
+CMD /bin/bash
+
+RUN sudo apt-get install libzip2 xz-utils -y
+
+RUN cd ~/ \
+ && git clone https://github.com/vitasdk/vdpm \
+ && cd vdpm \
+ && ./bootstrap-vitasdk.sh \
+ && ./install-all.sh
+
+WORKDIR /src
+ENTRYPOINT rm -rf build \
+  && mkdir build \
+	&& cd build \
+	&& cmake .. \
+	&& make

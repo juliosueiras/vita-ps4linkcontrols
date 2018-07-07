@@ -1,0 +1,13 @@
+sudo: required
+services:
+  - docker
+
+addons:
+  artifacts:
+    paths:
+      - build/ps4linkcontrols
+      - build/ps4linkcontrols.suprx
+      - build/ps4linkcontrols.velf
+    
+script:
+  - docker run -v $(pwd)/:/src juliosueiras/vitasdk
